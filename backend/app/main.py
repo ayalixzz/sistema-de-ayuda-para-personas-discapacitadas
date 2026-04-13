@@ -14,7 +14,11 @@ from .database import engine
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-models.Base.metadata.create_all(bind=engine)
+try:
+    models.Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"[WARNING] No se pudo crear tablas al inicio: {e}")
+    # Las tablas ya existen en Supabase, continuamos normalmente
 
 app = FastAPI(title="API Certificación Discapacidad y DAP")
 
