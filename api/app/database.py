@@ -22,7 +22,10 @@ if DATABASE_URL.startswith("postgres"):
             DATABASE_URL = base + ("?" + clean_params if clean_params else "")
     
     # Forzar SSL para Supabase usando pg8000
-    connect_args["ssl_context"] = ssl.create_default_context()
+    ssl_context = ssl.create_default_context()
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = ssl.CERT_NONE
+    connect_args["ssl_context"] = ssl_context
 
 elif "sqlite" in DATABASE_URL:
     connect_args["check_same_thread"] = False
