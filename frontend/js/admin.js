@@ -18,8 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const username = document.getElementById('username').value;
+        const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value;
+
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Verificando...';
 
         try {
             const res = await fetch('/api/auth/login', {
@@ -38,10 +43,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('admin_token', data.access_token);
                 showDashboard();
             } else {
-                showToast(data.detail || 'Error de autenticación', 'error');
+                // data.detail puede ser string o array (Pydantic)
+                const msg = Array.isArray(data.detail)
+                    ? data.detail.map(d => d.msg).join(', ')
+                    : (data.detail || 'Error de autenticación');
+                showToast(msg, 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
             }
         } catch (err) {
-            console.error(err);
+            console.error('Login error:', err);
+            showToast('No se pudo conectar con el servidor. Verifique que el sistema esté activo.', 'error');
+            btn.disabled = false;
+            btn.textContent = originalText;
         }
     });
 });
