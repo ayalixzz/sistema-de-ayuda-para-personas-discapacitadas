@@ -36,9 +36,10 @@ else:
     }
 
 # Crear el engine
-engine = create_engine(DATABASE_URL, **engine_kwargs)
 if DATABASE_URL.startswith("sqlite"):
     engine = create_engine(DATABASE_URL, connect_args=connect_args)
+else:
+    engine = create_engine(DATABASE_URL, **engine_kwargs)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
