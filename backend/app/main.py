@@ -9,8 +9,8 @@ import jwt
 from typing import Optional
 from datetime import datetime, timedelta, timezone
 
-from app import models, database
-from app.database import engine
+from . import models, database
+from .database import engine
 from passlib.context import CryptContext
 from pydantic import BaseModel
 

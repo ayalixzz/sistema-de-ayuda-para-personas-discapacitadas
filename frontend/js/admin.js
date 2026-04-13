@@ -37,13 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     'password': password
                 })
             });
-            const data = await res.json();
+
+            const contentType = res.headers.get("content-type");
+            let data;
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                data = await res.json();
+            } else {
+                const text = await res.text();
+                console.error('Server response was not JSON:', text);
+                throw new Error('Error interno del servidor (500). Verifique los logs en Vercel.');
+            }
 
             if (res.ok) {
                 localStorage.setItem('admin_token', data.access_token);
                 showDashboard();
             } else {
-                // data.detail puede ser string o array (Pydantic)
                 const msg = Array.isArray(data.detail)
                     ? data.detail.map(d => d.msg).join(', ')
                     : (data.detail || 'Error de autenticación');
@@ -53,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error('Login error:', err);
-            showToast('No se pudo conectar con el servidor. Verifique que el sistema esté activo.', 'error');
+            showToast(err.message || 'Error de red.', 'error');
             btn.disabled = false;
             btn.textContent = originalText;
         }
