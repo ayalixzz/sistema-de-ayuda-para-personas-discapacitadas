@@ -2,37 +2,48 @@ import os
 import ssl
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from urllib.parse import urlparse
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
-# Vercel fix: pg8000 no entiende sslmode en la URL, se pasa por connect_args
 connect_args = {}
 
+# Si es Postgres, desarmamos la URL para evitar errores de parsing en el Gateway de Supabase
 if DATABASE_URL.startswith("postgres"):
-    # Convertir a pg8000
-    if "postgresql+pg8000" not in DATABASE_URL:
-        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+pg8000://", 1)
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+pg8000://", 1)
+    parsed = urlparse(DATABASE_URL)
     
-    # Limpiar sslmode de la URL para evitar errores de parámetro inesperado
-    if "sslmode=" in DATABASE_URL:
-        if "?" in DATABASE_URL:
-            base, params = DATABASE_URL.split("?", 1)
-            clean_params = "&".join([p for p in params.split("&") if not p.startswith("sslmode=")])
-            DATABASE_URL = base + ("?" + clean_params if clean_params else "")
+    # Extraer credenciales manualmente
+    # format: postgresql://user:password@host:port/dbname
+    auth = parsed.netloc.split('@')[0]
+    user = auth.split(':')[0]
+    password = auth.split(':')[1] if ':' in auth else ""
     
-    # Forzar SSL para Supabase usando pg8000
-    ssl_context = ssl.create_default_context()
-    ssl_context.check_hostname = False
-    ssl_context.verify_mode = ssl.CERT_NONE
-    connect_args["ssl_context"] = ssl_context
+    endpoint = parsed.netloc.split('@')[1]
+    host = endpoint.split(':')[0]
+    port = int(endpoint.split(':')[1]) if ':' in endpoint else 5432
+    
+    dbname = parsed.path.lstrip('/')
+
+    # Reconstruimos la URL base para SQLAlchemy SIN credenciales
+    # Las credenciales las pasamos por connect_args para que pg8000 las maneje directo
+    DATABASE_URL = f"postgresql+pg8000://{host}:{port}/{dbname}"
+    
+    connect_args.update({
+        "user": user,
+        "password": password,
+        "ssl_context": ssl.create_default_context()
+    })
+    
+    # Desactivar verificación de certificado (necesario para Supabase en Vercel)
+    connect_args["ssl_context"].check_hostname = False
+    connect_args["ssl_context"].verify_mode = ssl.CERT_NONE
 
 elif "sqlite" in DATABASE_URL:
     connect_args["check_same_thread"] = False
 
+# Crear el engine con los argumentos explícitos
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
 
 def get_db():
