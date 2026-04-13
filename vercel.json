@@ -1,9 +1,28 @@
 {
   "version": 2,
-  "public": true,
   "name": "sistema-ayuda-discapacidad",
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
   "rewrites": [
-    { "source": "/", "destination": "/frontend/home.html" },
-    { "source": "/(.*)", "destination": "/frontend/$1" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/home.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
+    }
   ]
 }
