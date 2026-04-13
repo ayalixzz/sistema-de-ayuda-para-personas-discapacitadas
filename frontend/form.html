@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulario de solicitud de ayudas técnicas para personas con discapacidad. Complete su trámite digital aquí.">
+    <title>Solicitud DAP — SADAP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <link rel="stylesheet" href="css/form.css">
+</head>
+<body class="form-page">
+
+<!-- TOPBAR -->
+<div class="topbar">
+    <div class="container topbar__inner">
+        <div class="topbar__left">
+            <span class="topbar__dot">●</span>
+            <span>Portal de Servicios Institucionales</span>
+        </div>
+        <div class="topbar__right">
+            <a href="home.html" class="topbar__link">← Volver al inicio</a>
+        </div>
+    </div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header" id="site-header">
+    <div class="container site-header__inner">
+        <a href="home.html" class="site-header__brand" aria-label="Inicio SADAP">
+            <div class="logo-mark">
+                <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="21" cy="21" r="21" fill="#1B4F72"/>
+                    <path d="M14 28c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="21" cy="15" r="3.5" fill="#F0B429"/>
+                    <path d="M10 21h4M28 21h4" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <span class="logo-text__name">SADAP</span>
+                <span class="logo-text__sub">Sistema de Ayudas para Personas con Discapacidad</span>
+            </div>
+        </a>
+
+        <nav class="form-breadcrumb" aria-label="Ruta de navegación">
+            <a href="home.html">Inicio</a>
+            <span>›</span>
+            <span class="form-breadcrumb__current">Solicitud de Ayuda Técnica (DAP)</span>
+        </nav>
+
+        <div class="site-header__actions">
+            <button class="btn btn--sm" style="background:var(--gray-100);color:var(--gray-600);border:none" type="button" onclick="abrirConsulta()">📋 Consultar trámite</button>
+        </div>
+    </div>
+</header>
+
+<!-- MODAL CONSULTA -->
+<div id="consulta-modal" class="modal-overlay" hidden>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="consulta-title">
+        <div class="modal-header">
+            <h2 id="consulta-title">Consulta de estado</h2>
+            <button class="icon-btn" type="button" onclick="cerrarConsulta()" aria-label="Cerrar">×</button>
+        </div>
+        <p>Ingrese su número de documento para revisar el estado de su solicitud o consultar equipos asignados.</p>
+        <div class="form-group">
+            <label for="consulta_documento">Número de Documento</label>
+            <input type="text" id="consulta_documento" placeholder="Ej: 1020304050">
+        </div>
+        <div id="consulta-resultado" class="consulta-resultado" hidden aria-live="polite"></div>
+        <div class="form-actions">
+            <button class="btn btn--secondary" onclick="cerrarConsulta()">Cerrar</button>
+            <button class="btn btn--primary" onclick="realizarConsulta()">Consultar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN FORM -->
+<main class="form-main">
+    <div class="form-wrapper">
+
+        <!-- Intro strip -->
+        <div class="form-intro">
+            <div class="form-intro__left">
+                <h1 class="form-intro__title">Solicitud de Dispositivo de Asistencia Personal</h1>
+                <p class="form-intro__desc">Complete los 5 pasos del formulario. El proceso toma aproximadamente <strong>10 minutos</strong>. Sus datos están protegidos.</p>
+            </div>
+            <div class="form-intro__badges">
+                <span class="badge">🔒 Seguro</span>
+                <span class="badge">✅ Gratuito</span>
+                <span class="badge">⏱ ~10 min</span>
+            </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="wizard-progress" role="list" aria-label="Progreso del formulario">
+            <div class="step active" id="indicator-1" role="listitem" aria-current="step" data-step="1">
+                <div class="step-circle">
+                    <span class="step-num">1</span>
+                </div>
+                <span class="step-label">Datos personales</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="indicator-2" role="listitem" data-step="2">
+                <div class="step-circle">
+                    <span class="step-num">2</span>
+                </div>
+                <span class="step-label">Discapacidad</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="indicator-3" role="listitem" data-step="3">
+                <div class="step-circle">
+                    <span class="step-num">3</span>
+                </div>
+                <span class="step-label">Ayuda técnica</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="indicator-4" role="listitem" data-step="4">
+                <div class="step-circle">
+                    <span class="step-num">4</span>
+                </div>
+                <span class="step-label">Documentos</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="indicator-5" role="listitem" data-step="5">
+                <div class="step-circle">
+                    <span class="step-num">5</span>
+                </div>
+                <span class="step-label">Consentimientos</span>
+            </div>
+        </div>
+
+        <!-- FORM CARD -->
+        <div class="form-card">
+            <form id="wizard-form" novalidate>
+
+                <!-- ── PASO 1 ── -->
+                <section class="wizard-step active" id="step-1">
+                    <div class="step-head">
+                        <div class="step-kicker">Paso 1 de 5</div>
+                        <h2>Información personal y de contacto</h2>
+                        <p class="step-subtitle">Complete los datos del beneficiario. Los campos marcados con <strong>*</strong> son obligatorios.</p>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombres">Nombres completos *</label>
+                            <input type="text" id="nombres" name="nombres" placeholder="Ej: María Fernanda" autocomplete="given-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidos">Apellidos completos *</label>
+                            <input type="text" id="apellidos" name="apellidos" placeholder="Ej: García López" autocomplete="family-name" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipo_documento">Tipo de documento *</label>
+                            <select id="tipo_documento" name="tipo_documento" required>
+                                <option value="">Seleccione...</option>
+                                <option value="CC">Cédula de Ciudadanía</option>
+                                <option value="RC">Registro Civil</option>
+                                <option value="TI">Tarjeta de Identidad</option>
+                                <option value="CE">Cédula de Extranjería</option>
+                                <option value="PE">Permiso Especial</option>
+                                <option value="SC">Salvoconducto</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="numero_documento">Número de documento *</label>
+                            <input type="text" id="numero_documento" name="numero_documento" placeholder="Sin puntos ni guiones" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fecha_nacimiento">Fecha de nacimiento *</label>
+                            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="celular">Teléfono celular *</label>
+                            <input type="tel" id="celular" name="celular" placeholder="Ej: 3001234567" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="correo">Correo electrónico *</label>
+                        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección de residencia *</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Ej: Cra 7 No. 32-16" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="departamento">Departamento *</label>
+                            <input type="text" id="departamento" name="departamento" placeholder="Ej: Cundinamarca" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="municipio">Municipio / Localidad *</label>
+                            <input type="text" id="municipio" name="municipio" placeholder="Ej: Bogotá D.C." required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="requiere_cuidador" name="requiere_cuidador">
+                            <span>El beneficiario requiere un cuidador permanente</span>
+                        </label>
+                    </div>
+
+                    <div id="cuidador_section" class="hidden-section subsection-block">
+                        <div class="subsection-header">
+                            <span>👤 Datos del cuidador</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="cuidador_nombre">Nombre completo del cuidador</label>
+                            <input type="text" id="cuidador_nombre" name="cuidador_nombre" placeholder="Nombre y apellidos">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cuidador_cedula">Cédula del cuidador</label>
+                                <input type="text" id="cuidador_cedula" name="cuidador_cedula" placeholder="Número de documento">
+                            </div>
+                            <div class="form-group">
+                                <label for="cuidador_telefono">Teléfono del cuidador</label>
+                                <input type="tel" id="cuidador_telefono" name="cuidador_telefono" placeholder="Celular">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <span></span>
+                        <button type="button" class="btn btn--primary" onclick="nextStep(1)">Continuar →</button>
+                    </div>
+                </section>
+
+                <!-- ── PASO 2 ── -->
+                <section class="wizard-step" id="step-2">
+                    <div class="step-head">
+                        <div class="step-kicker">Paso 2 de 5</div>
+                        <h2>Caracterización de la discapacidad</h2>
+                        <p class="step-subtitle">Seleccione la categoría y complete la información socioeconómica.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Categoría de la discapacidad (seleccione una o más) *</label>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-card"><input type="checkbox" name="categoria_discapacidad" value="Fisica"><span>♿ Física</span></label>
+                            <label class="checkbox-card"><input type="checkbox" name="categoria_discapacidad" value="Auditiva"><span>👂 Auditiva</span></label>
+                            <label class="checkbox-card"><input type="checkbox" name="categoria_discapacidad" value="Visual"><span>👁 Visual</span></label>
+                            <label class="checkbox-card"><input type="checkbox" name="categoria_discapacidad" value="Sordoceguera"><span>🤲 Sordoceguera</span></label>
+                            <label class="checkbox-card"><input type="checkbox" name="categoria_discapacidad" value="Intelectual"><span>🧠 Intelectual</span></label>
+                            <label class="checkbox-card"><input type="checkbox" name="categoria_discapacidad" value="Psicosocial"><span>💙 Psicosocial</span></label>
+                            <label class="checkbox-card"><input type="checkbox" name="categoria_discapacidad" value="Multiple"><span>⭐ Múltiple</span></label>
+                        </div>
+                        <div id="categoria-error" class="field-error" hidden>Seleccione al menos una categoría para continuar.</div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="enfoque_diferencial">Enfoque diferencial</label>
+                            <select id="enfoque_diferencial" name="enfoque_diferencial">
+                                <option value="">Ninguno</option>
+                                <option value="Pertenencia Etnica">Pertenencia Étnica</option>
+                                <option value="Victima del Conflicto">Víctima del Conflicto Armado</option>
+                                <option value="Comunidad LGBT">Comunidad LGBTIQ+</option>
+                                <option value="Campesino">Población Campesina</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="poblacion_especial">Población especial</label>
+                            <select id="poblacion_especial" name="poblacion_especial">
+                                <option value="">No aplica</option>
+                                <option value="Militar">Militar o Fuerzas Armadas</option>
+                                <option value="Politico">Funcionario Público o Político</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="clasificacion_sisben">Clasificación Sisbén *</label>
+                            <select id="clasificacion_sisben" name="clasificacion_sisben" required>
+                                <option value="">Seleccione...</option>
+                                <option value="Grupo A">Grupo A — Pobreza Extrema</option>
+                                <option value="Grupo B">Grupo B — Pobreza Moderada</option>
+                                <option value="Grupo C">Grupo C — Vulnerable</option>
+                                <option value="Grupo D">Grupo D — No Pobre</option>
+                                <option value="Ninguno">No aplica / No tiene</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tipo_afiliacion_salud">Tipo de afiliación en salud *</label>
+                            <select id="tipo_afiliacion_salud" name="tipo_afiliacion_salud" required>
+                                <option value="">Seleccione...</option>
+                                <option value="Contributivo (EPS)">Régimen Contributivo (EPS)</option>
+                                <option value="Subsidiado">Régimen Subsidiado</option>
+                                <option value="Especial/Excepcion">Régimen Especial</option>
+                                <option value="Medicina Prepagada">Medicina Prepagada</option>
+                                <option value="Ninguna">Particular / Ninguna</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn btn--ghost" onclick="prevStep(2)">← Atrás</button>
+                        <button type="button" class="btn btn--primary" onclick="nextStep(2)">Continuar →</button>
+                    </div>
+                </section>
+
+                <!-- ── PASO 3 ── -->
+                <section class="wizard-step" id="step-3">
+                    <div class="step-head">
+                        <div class="step-kicker">Paso 3 de 5</div>
+                        <h2>Solicitud de ayuda técnica</h2>
+                        <p class="step-subtitle">Seleccione el tipo de dispositivo requerido.</p>
+                    </div>
+
+                    <div class="alert-info">
+                        <strong>⚠ Importante:</strong> Solo se tramitarán solicitudes de Dispositivos de Asistencia Personal (DAP) que <strong>NO estén incluidos en el Plan de Beneficios de Salud (PBS/POS)</strong>. Si su EPS debe cubrirlo, el trámite es ante ella directamente.
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo_dap">Categoría de la ayuda técnica *</label>
+                        <select id="tipo_dap" name="tipo_dap" required>
+                            <option value="">Seleccione una categoría...</option>
+                            <option value="Movilidad">♿ Movilidad</option>
+                            <option value="Cuidado en casa">🏠 Cuidado en casa</option>
+                            <option value="Otros">📦 Otros Dispositivos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dispositivo_requerido">Dispositivo requerido *</label>
+                        <select id="dispositivo_requerido" name="dispositivo_requerido" required disabled>
+                            <option value="">Primero seleccione una categoría...</option>
+                        </select>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn btn--ghost" onclick="prevStep(3)">← Atrás</button>
+                        <button type="button" class="btn btn--primary" onclick="nextStep(3)">Continuar →</button>
+                    </div>
+                </section>
+
+                <!-- ── PASO 4 ── -->
+                <section class="wizard-step" id="step-4">
+                    <div class="step-head">
+                        <div class="step-kicker">Paso 4 de 5</div>
+                        <h2>Carga de documentos</h2>
+                        <p class="step-subtitle">Adjunte los archivos requeridos en PDF o JPG. Tamaño máximo: 5MB por archivo.</p>
+                    </div>
+
+                    <div class="docs-grid">
+                        <div class="file-group">
+                            <div class="file-info">
+                                <span class="file-ico">🪪</span>
+                                <div>
+                                    <label for="doc_identidad">Documento de identidad (150%) *</label>
+                                    <span class="file-hint">Cédula, tarjeta de identidad o registro civil</span>
+                                </div>
+                            </div>
+                            <input type="file" id="doc_identidad" name="doc_identidad" accept=".pdf,.jpg,.jpeg" required>
+                            <span class="file-error" id="err_doc_identidad"></span>
+                        </div>
+
+                        <div class="file-group" id="file_cuidador_section" style="display:none">
+                            <div class="file-info">
+                                <span class="file-ico">👤</span>
+                                <div>
+                                    <label for="doc_cuidador">Documento de identidad del cuidador</label>
+                                    <span class="file-hint">Solo si marcó que requiere cuidador</span>
+                                </div>
+                            </div>
+                            <input type="file" id="doc_cuidador" name="doc_cuidador" accept=".pdf,.jpg,.jpeg">
+                            <span class="file-error" id="err_doc_cuidador"></span>
+                        </div>
+
+                        <div class="file-group">
+                            <div class="file-info">
+                                <span class="file-ico">🏥</span>
+                                <div>
+                                    <label for="historia_clinica">Historia clínica con diagnóstico CIE-10 *</label>
+                                    <span class="file-hint">Emitida por médico tratante, con sello y firma</span>
+                                </div>
+                            </div>
+                            <input type="file" id="historia_clinica" name="historia_clinica" accept=".pdf,.jpg,.jpeg" required>
+                            <span class="file-error" id="err_historia_clinica"></span>
+                        </div>
+
+                        <div class="file-group">
+                            <div class="file-info">
+                                <span class="file-ico">💡</span>
+                                <div>
+                                    <label for="recibo_publico">Recibo de servicio público reciente *</label>
+                                    <span class="file-hint">No mayor a 3 meses. Prueba de domicilio.</span>
+                                </div>
+                            </div>
+                            <input type="file" id="recibo_publico" name="recibo_publico" accept=".pdf,.jpg,.jpeg" required>
+                            <span class="file-error" id="err_recibo_publico"></span>
+                        </div>
+
+                        <div class="file-group">
+                            <div class="file-info">
+                                <span class="file-ico">🏦</span>
+                                <div>
+                                    <label for="certificado_salud">Certificado de afiliación a salud (EPS/ADRES) *</label>
+                                    <span class="file-hint">Vigente al momento de la solicitud</span>
+                                </div>
+                            </div>
+                            <input type="file" id="certificado_salud" name="certificado_salud" accept=".pdf,.jpg,.jpeg" required>
+                            <span class="file-error" id="err_certificado_salud"></span>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn btn--ghost" onclick="prevStep(4)">← Atrás</button>
+                        <button type="button" class="btn btn--primary" onclick="nextStep(4)">Continuar →</button>
+                    </div>
+                </section>
+
+                <!-- ── PASO 5 ── -->
+                <section class="wizard-step" id="step-5">
+                    <div class="step-head">
+                        <div class="step-kicker">Paso 5 de 5 — Último paso</div>
+                        <h2>Declaraciones y consentimientos</h2>
+                        <p class="step-subtitle">Lea detenidamente y acepte las siguientes declaraciones para radicar su solicitud.</p>
+                    </div>
+
+                    <div class="declaraciones-container">
+                        <label class="checkbox-large">
+                            <input type="checkbox" id="acepta_politica" name="acepta_politica" required>
+                            <div class="checkbox-large__body">
+                                <strong>Autorización de tratamiento de datos personales</strong>
+                                <p>Acepto que mis datos personales sean recopilados y utilizados exclusivamente para la gestión de este trámite, de conformidad con la Ley 1581 de 2012 y sus decretos reglamentarios.</p>
+                            </div>
+                        </label>
+
+                        <label class="checkbox-large">
+                            <input type="checkbox" id="autoriza_notificacion" name="autoriza_notificacion" required>
+                            <div class="checkbox-large__body">
+                                <strong>Autorización de notificaciones</strong>
+                                <p>Autorizo ser notificado del estado de mi trámite a través del correo electrónico y número de celular registrados en este formulario.</p>
+                            </div>
+                        </label>
+
+                        <label class="checkbox-large">
+                            <input type="checkbox" id="declaracion_juramentada" name="declaracion_juramentada" required>
+                            <div class="checkbox-large__body">
+                                <strong>Declaración juramentada de carencia de recursos</strong>
+                                <p>Bajo la gravedad del juramento, declaro que carezco de los recursos económicos suficientes para adquirir de manera particular el dispositivo de asistencia personal solicitado, y que dicho dispositivo es necesario para mejorar mi independencia funcional y calidad de vida.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="step-actions">
+                        <button type="button" class="btn btn--ghost" onclick="prevStep(5)">← Atrás</button>
+                        <button type="submit" class="btn btn--submit" id="btn-submit">Radicar solicitud ✓</button>
+                    </div>
+                </section>
+
+                <!-- ── ÉXITO ── -->
+                <section class="wizard-step" id="step-success">
+                    <div class="success-block">
+                        <div class="success-check">✓</div>
+                        <h2>Solicitud radicada exitosamente</h2>
+                        <p>Su trámite ha sido recibido. Un profesional evaluará su caso en los próximos <strong>15 días hábiles</strong>.</p>
+                        <div class="radicado-card">
+                            <span class="radicado-card__label">Número de radicado</span>
+                            <span class="radicado-card__num" id="radicado-number">RAD-XXXXXX</span>
+                        </div>
+                        <p class="text-muted">Conserve este número para hacer seguimiento. Se ha enviado una copia a su correo electrónico.</p>
+                        <a href="home.html" class="btn btn--primary" style="margin-top:24px">Volver al inicio</a>
+                    </div>
+                </section>
+
+                <!-- Loading -->
+                <div id="loading" class="loading-overlay">
+                    <div class="spinner"></div>
+                    <p>Enviando solicitud...</p>
+                </div>
+
+            </form>
+        </div><!-- /.form-card -->
+
+    </div><!-- /.form-wrapper -->
+</main>
+
+<!-- FOOTER MINI -->
+<footer class="form-footer">
+    <div class="container form-footer__inner">
+        <span>© 2025 SADAP — <a href="home.html">Inicio</a></span>
+        <span>📞 Línea de ayuda: <strong>195</strong> &nbsp;|&nbsp; Lun–Vie 7:00–16:30</span>
+    </div>
+</footer>
+
+<script>
+    // Topbar scroll
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => { header.classList.toggle('is-scrolled', window.scrollY > 5); });
+</script>
+<script src="js/script.js"></script>
+</body>
+</html>

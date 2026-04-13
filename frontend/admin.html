@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>Admin - Panel de Control Integral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    
+    <!-- Login Pantalla -->
+    <div id="login-container" class="admin-login" style="display:none;">
+        <div class="login-card">
+            <h2>Panel de Administrador</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%">Ingresar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Principal -->
+    <div id="dashboard-container" class="admin-dashboard" style="display:none;">
+        <div id="sidebar-overlay" class="sidebar-overlay" hidden></div>
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>Admin DAPs</h2>
+            </div>
+            <ul class="nav-links">
+                <li><button class="tab-btn active" onclick="switchTab('solicitudes')">Solicitudes</button></li>
+                <li><button class="tab-btn" onclick="switchTab('inventario')">Inventario / Trazabilidad</button></li>
+                <li><button class="tab-btn" onclick="switchTab('alertas')">Auditoría Pacientes</button></li>
+                <li><button class="tab-btn tab-btn--danger" onclick="switchTab('mantenimiento')">Mantenimiento crítico</button></li>
+            </ul>
+            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+        </nav>
+
+        <main class="main-content">
+            <header class="admin-topbar">
+                <div class="topbar-left">
+                    <button id="sidebar-toggle" class="icon-btn" type="button" aria-label="Abrir menú">☰</button>
+                    <div>
+                        <div class="topbar-title" id="topbar-title">Panel</div>
+                        <div class="topbar-subtitle">Operación y seguimiento</div>
+                    </div>
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn-secondary btn-compact" type="button" onclick="refreshActiveTab()">Actualizar</button>
+                </div>
+            </header>
+
+            <!-- Header Metrics -->
+            <div class="metrics-bar">
+                <div class="metric-card">Total Equipos: <span id="metric-total">0</span></div>
+                <div class="metric-card">Asignados: <span id="metric-asignados">0</span></div>
+                <div class="metric-card metric-card--warn">Auditoría DAP: <span id="metric-alertas">0</span></div>
+                <div class="metric-card metric-card--danger">Alerta Equipos: <span id="metric-mantenimiento">0</span></div>
+            </div>
+
+            <!-- Tab: Solicitudes -->
+            <div id="tab-solicitudes" class="tab-content active">
+                <h3>Gestión de Solicitudes</h3>
+                <div class="table-tools">
+                    <input id="solicitudes-search" type="search" placeholder="Buscar por radicado, documento o nombre" autocomplete="off">
+                    <select id="solicitudes-estado">
+                        <option value="">Todos los estados</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aprobada">Aprobada</option>
+                        <option value="Rechazada">Rechazada</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Radicado</th>
+                                <th>Documento</th>
+                                <th>Beneficiario</th>
+                                <th>DAP Requerido</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="solicitudes-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Inventario -->
+            <div id="tab-inventario" class="tab-content">
+                <div class="header-flex">
+                    <h3>Inventario & Trazabilidad</h3>
+                    <button class="btn-primary btn-sm" onclick="addEquipo()">+ Añadir Equipo</button>
+                </div>
+                <div class="table-tools">
+                    <input id="inventario-search" type="search" placeholder="Buscar por codigo, tipo o asignado" autocomplete="off">
+                    <select id="inventario-estado">
+                        <option value="">Todos</option>
+                        <option value="Disponible">Disponible</option>
+                        <option value="Asignado">Asignado</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Tipo DAP</th>
+                                <th>Estado</th>
+                                <th>Asignado a</th>
+                                <th>Fecha Devolución</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventario-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Alertas (Pacientes) -->
+            <div id="tab-alertas" class="tab-content">
+                <h3>Auditoría de Pacientes (3 Meses)</h3>
+                <p>Pacientes que requieren auditoría de estado y validación del equipo asigando.</p>
+                <div class="table-tools">
+                    <input id="alertas-search" type="search" placeholder="Buscar por equipo, beneficiario o telefono" autocomplete="off">
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Equipo</th>
+                                <th>Beneficiario</th>
+                                <th>Teléfono</th>
+                                <th>Fecha Revisión</th>
+                                <th>Lugar Asignado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alertas-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab: Mantenimiento Preventivo (Equipos) -->
+            <div id="tab-mantenimiento" class="tab-content">
+                <h3 style="color: var(--danger-color);">⚠️ Mantenimiento Preventivo Crítico</h3>
+                <p>Equipos que llevan más de 90 días sin revisión técnica estructural. <strong>Requieren atención inmediata.</strong></p>
+                <div class="table-tools">
+                    <input id="mantenimiento-search" type="search" placeholder="Buscar por codigo o tipo" autocomplete="off">
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Código Equipo</th>
+                                <th>Tipo DAP</th>
+                                <th>Estado Actual</th>
+                                <th>Última Revisión</th>
+                                <th>Días de Retraso</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mantenimiento-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal Asignación -->
+    <div id="asignar-modal" class="modal-overlay" hidden>
+        <div class="modal-content modal-md" role="dialog" aria-modal="true" aria-labelledby="asignar-title">
+            <div class="modal-header">
+                <h3 id="asignar-title">Asignar equipo (aprobar)</h3>
+                <button class="icon-btn" type="button" onclick="cerrarAsignarModal()" aria-label="Cerrar">×</button>
+            </div>
+            <p>Beneficiario: <strong id="asig_beneficiario"></strong></p>
+            <input type="hidden" id="asig_sol_id">
+            
+            <div class="form-group">
+                <label>Equipo Disponible *</label>
+                <select id="asig_equipo" required></select>
+            </div>
+            <div class="form-group">
+                <label>Lugar de Entrega (Oficial) *</label>
+                <input type="text" id="asig_ubicacion" required placeholder="Ej: Sede Principal Teusaquillo">
+            </div>
+            <div class="form-group">
+                <label>Fecha de Devolución Programada *</label>
+                <input type="date" id="asig_fecha_dev" required>
+            </div>
+            
+            <div class="form-actions">
+                <button class="btn-secondary" onclick="cerrarAsignarModal()">Cancelar</button>
+                <button class="btn-success" onclick="submitAsignar()">Confirmar Asignación</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Mantenimiento -->
+    <div id="mantenimiento-modal" class="modal-overlay" hidden>
+        <div class="modal-content modal-sm" role="dialog" aria-modal="true" aria-labelledby="manto-title">
+            <div class="modal-header">
+                <h3 id="manto-title" style="color: var(--danger-color);">Completar mantenimiento</h3>
+                <button class="icon-btn" type="button" onclick="cerrarMantenimientoModal()" aria-label="Cerrar">×</button>
+            </div>
+            <p>¿Estás completamente seguro de marcar el equipo <strong id="manto_codigo"></strong> como revisado?</p>
+            <p class="file-instructions">Esto actualizará su fecha de "última revisión" al día de hoy, y la alerta automática volverá a saltar dentro de 90 días continuos.</p>
+            <input type="hidden" id="manto_equipo_id">
+            
+            <div class="form-actions">
+                <button class="btn-secondary" onclick="cerrarMantenimientoModal()">Cancelar</button>
+                <button class="btn-danger" onclick="submitMantenimiento()">Sí, marcar como completado</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

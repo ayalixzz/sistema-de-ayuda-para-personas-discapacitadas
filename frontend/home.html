@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal de Gestión de Ayudas Técnicas y Certificación de Discapacidad. Solicite dispositivos de asistencia personal de manera digital, gratuita y segura.">
+    <title>SADAP — Sistema de Ayudas para Personas con Discapacidad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+
+<!-- ░░ TOPBAR INSTITUCIONAL ░░ -->
+<div class="topbar">
+    <div class="container topbar__inner">
+        <div class="topbar__left">
+            <span class="topbar__dot">●</span>
+            <span>Portal de Servicios Institucionales</span>
+        </div>
+        <div class="topbar__right">
+            <a href="#accesibilidad" class="topbar__link">Accesibilidad</a>
+            <span class="topbar__sep">|</span>
+            <a href="form.html" class="topbar__link">Ir al formulario</a>
+        </div>
+    </div>
+</div>
+
+<!-- ░░ HEADER ░░ -->
+<header class="site-header" id="site-header">
+    <div class="container site-header__inner">
+        <!-- Logo -->
+        <a href="home.html" class="site-header__brand" aria-label="Inicio SADAP">
+            <div class="logo-mark">
+                <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="21" cy="21" r="21" fill="#1B4F72"/>
+                    <path d="M14 28c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="21" cy="15" r="3.5" fill="#F0B429"/>
+                    <path d="M10 21h4M28 21h4" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="logo-text">
+                <span class="logo-text__name">SADAP</span>
+                <span class="logo-text__sub">Sistema de Ayudas para Personas con Discapacidad</span>
+            </div>
+        </a>
+
+        <!-- Nav -->
+        <nav class="main-nav" aria-label="Navegación principal">
+            <ul class="main-nav__list" role="list">
+                <li><a href="#inicio" class="main-nav__link main-nav__link--active">Inicio</a></li>
+                <li><a href="#servicios" class="main-nav__link">Servicios</a></li>
+                <li><a href="#proceso" class="main-nav__link">¿Cómo funciona?</a></li>
+                <li><a href="#requisitos" class="main-nav__link">Requisitos</a></li>
+                <li><a href="#contacto" class="main-nav__link">Contacto</a></li>
+            </ul>
+        </nav>
+
+        <!-- CTA & menu -->
+        <div class="site-header__actions">
+            <a href="form.html" class="btn btn--primary btn--sm">Iniciar trámite</a>
+            <button class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <ul role="list">
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#proceso">¿Cómo funciona?</a></li>
+            <li><a href="#requisitos">Requisitos</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+            <li><a href="form.html" class="btn btn--primary" style="display:block;text-align:center;margin-top:8px">Iniciar trámite</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+
+    <!-- ░░ HERO ░░ -->
+    <section class="hero" id="inicio" aria-labelledby="hero-title">
+        <div class="hero__media">
+            <img src="img/hero_home.png" alt="Persona en silla de ruedas recibiendo ayuda de un profesional de salud" class="hero__img" loading="eager">
+            <div class="hero__scrim"></div>
+        </div>
+        <div class="container hero__content">
+            <div class="hero__text">
+                <span class="eyebrow">Programa de Inclusión Social</span>
+                <h1 id="hero-title" class="hero__title">
+                    Ayudas técnicas gratuitas<br>para ciudadanos con discapacidad
+                </h1>
+                <p class="hero__desc">
+                    Gestionamos la entrega de dispositivos de asistencia personal (DAP) para mejorar la independencia funcional y la calidad de vida de personas en condición de discapacidad.
+                </p>
+                <div class="hero__actions">
+                    <a href="form.html" class="btn btn--cta">Solicitar ayuda técnica</a>
+                    <a href="#proceso" class="btn btn--outline-white">Ver cómo funciona</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero__wave">
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 60V30C360 0 720 60 1080 30L1440 0V60H0Z" fill="#ffffff"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ░░ QUICK ACCESS STRIP ░░ -->
+    <section class="quick-access" aria-label="Accesos rápidos">
+        <div class="container">
+            <div class="quick-access__grid">
+                <a href="form.html" class="qa-card">
+                    <div class="qa-card__icon">📋</div>
+                    <div class="qa-card__text">
+                        <strong>Nueva solicitud</strong>
+                        <span>Inicie su trámite digital</span>
+                    </div>
+                    <span class="qa-card__arrow">→</span>
+                </a>
+                <a href="form.html#consulta" class="qa-card" onclick="abrirConsultaHome()">
+                    <div class="qa-card__icon">🔍</div>
+                    <div class="qa-card__text">
+                        <strong>Consultar estado</strong>
+                        <span>Revise su número de radicado</span>
+                    </div>
+                    <span class="qa-card__arrow">→</span>
+                </a>
+                <a href="#requisitos" class="qa-card">
+                    <div class="qa-card__icon">📄</div>
+                    <div class="qa-card__text">
+                        <strong>Lista de requisitos</strong>
+                        <span>Documentos necesarios</span>
+                    </div>
+                    <span class="qa-card__arrow">→</span>
+                </a>
+                <a href="#contacto" class="qa-card">
+                    <div class="qa-card__icon">📞</div>
+                    <div class="qa-card__text">
+                        <strong>Línea de atención</strong>
+                        <span>Comuníquese con nosotros</span>
+                    </div>
+                    <span class="qa-card__arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ ABOUT / MISSION ░░ -->
+    <section class="about-section" id="servicios">
+        <div class="container about-section__grid">
+            <div class="about-section__image">
+                <img src="img/services_banner.png" alt="Dispositivos de asistencia técnica" loading="lazy">
+            </div>
+            <div class="about-section__body">
+                <span class="eyebrow eyebrow--dark">Nuestra misión</span>
+                <h2 class="section-title">Inclusión y autonomía para todos los ciudadanos</h2>
+                <p>El programa de ayudas técnicas está orientado a garantizar el acceso equitativo a dispositivos de asistencia personal que no se encuentran cubiertos por el Plan de Beneficios de Salud (PBS/POS), priorizando a la población en situación de vulnerabilidad socioeconómica.</p>
+                <p style="margin-top:16px">Nuestro proceso es <strong>100% digital, gratuito y sin intermediarios</strong>. Una vez radicada su solicitud, un equipo técnico evaluará su caso y coordinará la entrega del dispositivo requerido.</p>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <span class="stat-num">+4.200</span>
+                        <span class="stat-label">Dispositivos entregados</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">98%</span>
+                        <span class="stat-label">Casos resueltos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">15 días</span>
+                        <span class="stat-label">Tiempo promedio de respuesta</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ DEVICE CATEGORIES ░░ -->
+    <section class="devices-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="eyebrow eyebrow--center">Catálogo de dispositivos</span>
+                <h2 class="section-title section-title--center">Tipos de ayudas técnicas disponibles</h2>
+                <p class="section-desc">Seleccionadas según funcionalidad, diagnóstico médico y evaluación de necesidad.</p>
+            </div>
+            <div class="devices-grid">
+                <div class="device-card">
+                    <div class="device-card__ico">♿</div>
+                    <h3>Movilidad</h3>
+                    <ul>
+                        <li>Silla de ruedas manual / eléctrica</li>
+                        <li>Caminadores y andadores</li>
+                        <li>Muletas y bastones</li>
+                        <li>Ortesis y prótesis</li>
+                    </ul>
+                </div>
+                <div class="device-card">
+                    <div class="device-card__ico">👂</div>
+                    <h3>Comunicación sensorial</h3>
+                    <ul>
+                        <li>Amplificadores auditivos</li>
+                        <li>Lentes ópticos especializados</li>
+                        <li>Bastones guía para ciegos</li>
+                        <li>Dispositivos de comunicación aumentativa</li>
+                    </ul>
+                </div>
+                <div class="device-card">
+                    <div class="device-card__ico">🏠</div>
+                    <h3>Cuidado en casa</h3>
+                    <ul>
+                        <li>Camas articuladas</li>
+                        <li>Sillas de baño y ducha</li>
+                        <li>Colchones anti-escaras</li>
+                        <li>Barras de apoyo y rampas</li>
+                    </ul>
+                </div>
+                <div class="device-card">
+                    <div class="device-card__ico">🤲</div>
+                    <h3>Otros dispositivos</h3>
+                    <ul>
+                        <li>Grúas de transferencia</li>
+                        <li>Vertedoras y utensilios adaptados</li>
+                        <li>Equipos de bipedestación</li>
+                        <li>Adaptaciones posturales</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ PROCESO ░░ -->
+    <section class="process-section" id="proceso">
+        <div class="container">
+            <div class="section-header">
+                <span class="eyebrow eyebrow--center eyebrow--light">Proceso de solicitud</span>
+                <h2 class="section-title section-title--center section-title--light">¿Cómo funciona el trámite?</h2>
+                <p class="section-desc section-desc--light">Cuatro pasos simples para obtener su ayuda técnica de forma gratuita.</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="ps-num">01</div>
+                    <div class="ps-body">
+                        <h3>Diligencie el formulario digital</h3>
+                        <p>Complete los 5 pasos del asistente con su información personal, diagnóstico, tipo de dispositivo requerido y documentos de soporte.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="ps-num">02</div>
+                    <div class="ps-body">
+                        <h3>Reciba su número de radicado</h3>
+                        <p>Al enviar el formulario, recibirá inmediatamente un número de radicado para hacer seguimiento a su solicitud en cualquier momento.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="ps-num">03</div>
+                    <div class="ps-body">
+                        <h3>Evaluación institucional</h3>
+                        <p>Un profesional de salud y un trabajador social revisarán su caso, validarán los documentos y aprobarán el tipo de dispositivo apropiado.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="ps-num">04</div>
+                    <div class="ps-body">
+                        <h3>Entrega del dispositivo</h3>
+                        <p>Una vez aprobada su solicitud, coordinamos la entrega del dispositivo en el punto de atención más cercano a su domicilio.</p>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:48px">
+                <a href="form.html" class="btn btn--cta">Iniciar mi solicitud ahora</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ REQUISITOS ░░ -->
+    <section class="req-section" id="requisitos">
+        <div class="container req-section__grid">
+            <div class="req-section__body">
+                <span class="eyebrow eyebrow--dark">Antes de comenzar</span>
+                <h2 class="section-title">Documentos necesarios para la solicitud</h2>
+                <p>Tenga listos los siguientes documentos en formato PDF o JPG (máx. 5MB cada uno) antes de iniciar el formulario:</p>
+                <ol class="req-list">
+                    <li>
+                        <span class="req-num">1</span>
+                        <div>
+                            <strong>Documento de identidad</strong>
+                            <p>Cédula de ciudadanía, tarjeta de identidad o registro civil, ampliado al 150%.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="req-num">2</span>
+                        <div>
+                            <strong>Historia clínica reciente</strong>
+                            <p>Emitida por un profesional de salud con diagnóstico CIE-10 que justifique la necesidad del dispositivo.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="req-num">3</span>
+                        <div>
+                            <strong>Recibo de servicio público</strong>
+                            <p>No mayor a 3 meses. Sirve como prueba de dirección de residencia.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="req-num">4</span>
+                        <div>
+                            <strong>Certificado de afiliación a salud</strong>
+                            <p>EPS o ADRES vigente.</p>
+                        </div>
+                    </li>
+                </ol>
+                <div style="margin-top:32px">
+                    <a href="form.html" class="btn btn--primary">Tengo mis documentos — Continuar →</a>
+                </div>
+            </div>
+            <div class="req-section__aside">
+                <div class="info-box">
+                    <div class="info-box__icon">ℹ</div>
+                    <h4>Población priorizada</h4>
+                    <ul>
+                        <li>Sisbén Grupos A, B y C</li>
+                        <li>Adultos mayores (60+ años)</li>
+                        <li>Menores de edad con discapacidad</li>
+                        <li>Víctimas del conflicto armado</li>
+                        <li>Comunidades étnicas</li>
+                    </ul>
+                </div>
+                <div class="info-box info-box--warning">
+                    <div class="info-box__icon">⚠</div>
+                    <h4>Importante</h4>
+                    <p>Solo se aprueban dispositivos que <strong>NO están incluidos</strong> en el Plan de Beneficios de Salud (PBS/POS). Si su dispositivo está cubierto por su EPS, debe solicitarlo directamente a ella.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ░░ CTA FINAL ░░ -->
+    <section class="cta-section" aria-label="Llamado a la acción">
+        <div class="container cta-section__inner">
+            <div>
+                <h2>¿Listo para iniciar su solicitud?</h2>
+                <p>El proceso es completamente digital y gratuito. No necesita intermediarios.</p>
+            </div>
+            <a href="form.html" class="btn btn--cta btn--lg">Iniciar trámite digital</a>
+        </div>
+    </section>
+
+</main>
+
+<!-- ░░ FOOTER ░░ -->
+<footer class="site-footer" id="contacto">
+    <div class="container site-footer__grid">
+        <div class="footer-brand">
+            <div class="logo-mark logo-mark--sm">
+                <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="21" cy="21" r="21" fill="#2E86C1"/>
+                    <path d="M14 28c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="21" cy="15" r="3.5" fill="#F0B429"/>
+                </svg>
+            </div>
+            <p class="footer-brand__name">SADAP</p>
+            <p class="footer-brand__desc">Sistema de Ayudas para Personas con Discapacidad. Comprometidos con la inclusión y la autonomía.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Servicios</h4>
+            <ul>
+                <li><a href="form.html">Nueva solicitud de DAP</a></li>
+                <li><a href="form.html">Consultar estado de trámite</a></li>
+                <li><a href="#requisitos">Documentos requeridos</a></li>
+                <li><a href="#servicios">Tipos de dispositivos</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Información</h4>
+            <ul>
+                <li><a href="#proceso">¿Cómo funciona?</a></li>
+                <li><a href="#requisitos">Población priorizada</a></li>
+                <li><a href="#">Política de datos</a></li>
+                <li><a href="#">Normativa aplicable</a></li>
+            </ul>
+        </div>
+        <div class="footer-col footer-col--contact">
+            <h4>Contacto</h4>
+            <p>📞 Línea gratuita: <strong>195</strong></p>
+            <p>📧 ayudastecnicas@secretariadesalud.gov.co</p>
+            <p>🕐 Lun–Vie: 7:00 a.m. – 4:30 p.m.</p>
+            <p style="margin-top:12px">📍 Cra. 32 No. 12-81, Bogotá D.C.</p>
+        </div>
+    </div>
+    <div class="site-footer__bottom">
+        <div class="container">
+            <span>© 2025 SADAP — Todos los derechos reservados</span>
+            <span>Diseñado para la inclusión y accesibilidad</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => {
+        const open = !mobileMenu.hidden;
+        mobileMenu.hidden = open;
+        hamburger.setAttribute('aria-expanded', String(!open));
+        hamburger.classList.toggle('is-open', !open);
+    });
+
+    // Sticky header shadow on scroll
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('is-scrolled', window.scrollY > 10);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+        });
+    });
+</script>
+</body>
+</html>
