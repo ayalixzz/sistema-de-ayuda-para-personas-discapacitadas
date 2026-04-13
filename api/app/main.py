@@ -66,15 +66,6 @@ def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends
         raise HTTPException(status_code=401, detail="Usuario no encontrado")
     return user
 
-@app.on_event("startup")
-def startup_event():
-    db = database.SessionLocal()
-    admin = db.query(models.AdminUser).filter(models.AdminUser.username == "admin").first()
-    if not admin:
-        new_admin = models.AdminUser(username="admin", password_hash=get_password_hash("admin123"))
-        db.add(new_admin)
-        db.commit()
-    db.close()
 
 
 def save_upload_file(upload_file: UploadFile, radicado: str) -> Optional[str]:
