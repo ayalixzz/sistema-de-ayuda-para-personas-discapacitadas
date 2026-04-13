@@ -39,7 +39,7 @@ except Exception as e:
     print(f"[WARNING] No se pudo crear tablas al inicio: {e}")
     # Las tablas ya existen en Supabase, continuamos normalmente
 
-app = FastAPI(title="API Certificación Discapacidad y DAP")
+app = FastAPI(title="API Banco de Ayudas Técnicas")
 
 app.add_middleware(
     CORSMiddleware,

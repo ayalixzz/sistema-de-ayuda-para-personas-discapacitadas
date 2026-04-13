@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "sistema-ayuda-discapacidad",
+  "name": "banco-de-ayudas-tecnicas",
   "builds": [
     {
       "src": "api/index.py",
