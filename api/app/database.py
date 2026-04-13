@@ -1,28 +1,30 @@
 import os
+import ssl
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
-# Vercel serverless no soporta psycopg2-binary
-# Convertimos a pg8000 y LIMPIAMOS parámetros no soportados como sslmode
-if DATABASE_URL.startswith("postgresql://") or DATABASE_URL.startswith("postgres://"):
-    if DATABASE_URL.startswith("postgresql://"):
+# Vercel fix: pg8000 no entiende sslmode en la URL, se pasa por connect_args
+connect_args = {}
+
+if DATABASE_URL.startswith("postgres"):
+    # Convertir a pg8000
+    if "postgresql+pg8000" not in DATABASE_URL:
         DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+pg8000://", 1)
-    else:
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+pg8000://", 1)
     
-    # Eliminar sslmode porque pg8000 no lo reconoce en el connect()
-    parsed = urlparse(DATABASE_URL)
-    query = parse_qs(parsed.query)
-    query.pop('sslmode', None)
-    new_query = urlencode(query, doseq=True)
-    DATABASE_URL = urlunparse(parsed._replace(query=new_query))
+    # Limpiar sslmode de la URL para evitar errores de parámetro inesperado
+    if "sslmode=" in DATABASE_URL:
+        if "?" in DATABASE_URL:
+            base, params = DATABASE_URL.split("?", 1)
+            clean_params = "&".join([p for p in params.split("&") if not p.startswith("sslmode=")])
+            DATABASE_URL = base + ("?" + clean_params if clean_params else "")
+    
+    # Forzar SSL para Supabase usando pg8000
+    connect_args["ssl_context"] = ssl.create_default_context()
 
-# Para SQLite necesita connect_args especial
-connect_args = {}
-if "sqlite" in DATABASE_URL:
+elif "sqlite" in DATABASE_URL:
     connect_args["check_same_thread"] = False
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
