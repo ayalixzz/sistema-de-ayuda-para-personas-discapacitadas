@@ -16,6 +16,25 @@ from pydantic import BaseModel
 
 try:
     models.Base.metadata.create_all(bind=engine)
+    
+    # Crear usuario administrador por defecto si usamos SQLite (o si no existe en la BD actual)
+    db = database.SessionLocal()
+    try:
+        admin = db.query(models.AdminUser).filter(models.AdminUser.username == "admin").first()
+        if not admin:
+            pwd_context_temp = CryptContext(schemes=["bcrypt"], deprecated="auto")
+            new_admin = models.AdminUser(
+                username="admin", 
+                password_hash=pwd_context_temp.hash("admin123")
+            )
+            db.add(new_admin)
+            db.commit()
+            print("[INFO] Usuario administrador creado exitosamente (admin / admin123)")
+    except Exception as inner_e:
+        print(f"[WARNING] No se pudo crear usuario admin: {inner_e}")
+    finally:
+        db.close()
+        
 except Exception as e:
     print(f"[WARNING] No se pudo crear tablas al inicio: {e}")
     # Las tablas ya existen en Supabase, continuamos normalmente

@@ -2,8 +2,16 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
+# Detectar si estamos en Vercel
+IS_VERCEL = "VERCEL" in os.environ
+default_db = "sqlite:////tmp/test.db" if IS_VERCEL else "sqlite:///./test.db"
+
 # Obtener URL y limpiar espacios/comillas accidentales
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db").strip().strip('"').strip("'")
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+if not DATABASE_URL.strip():
+    DATABASE_URL = default_db
+else:
+    DATABASE_URL = DATABASE_URL.strip().strip('"').strip("'")
 
 # SQLAlchemy 1.4+ requiere postgresql:// en lugar de postgres://
 if DATABASE_URL.startswith("postgres://"):
