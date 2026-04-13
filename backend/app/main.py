@@ -26,7 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = "uploads"
+# Configuración de carpetas para Vercel (solo lectura excepto /tmp)
+IS_VERCEL = "VERCEL" in os.environ
+UPLOAD_DIR = "/tmp/uploads" if IS_VERCEL else "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

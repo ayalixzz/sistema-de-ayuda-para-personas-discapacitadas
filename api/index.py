@@ -1,8 +1,9 @@
 import sys
 import os
 
-# Add the backend folder to the python path so imports inside app.main work
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "backend"))
+# Add the current directory and backend to the python path
+base_dir = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(os.path.join(base_dir, "backend"))
 
 from app.main import app
 
