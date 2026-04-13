@@ -3,229 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light">
-    <title>Admin - Panel de Control Integral</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/admin.css">
+    <title>SADAP — Gestión Administrativa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <link rel="stylesheet" href="css/admin_portal.css">
 </head>
-<body>
-    
-    <!-- Login Pantalla -->
-    <div id="login-container" class="admin-login" style="display:none;">
-        <div class="login-card">
-            <h2>Panel de Administrador</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label>Usuario</label>
-                    <input type="text" id="username" required>
+<body class="admin-body">
+
+    <!-- ░░ PANTALLA DE LOGIN ░░ -->
+    <div id="login-container" class="admin-login-layout" style="display:none;">
+        <div class="login-portal-card">
+            <div class="login-portal-header">
+                <div class="login-portal-logo">
+                    <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="21" cy="21" r="21" fill="#1B4F72"/>
+                        <path d="M14 28c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="21" cy="15" r="3.5" fill="#F0B429"/>
+                    </svg>
                 </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit" class="btn-primary" style="width: 100%">Ingresar</button>
-            </form>
+                <h1>Panel Administrativo</h1>
+                <p>Ingrese sus credenciales de funcionario</p>
+            </div>
+            <div class="login-portal-body">
+                <form id="login-form">
+                    <div class="form-group" style="margin-bottom:16px;">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" placeholder="Ej: admin" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom:24px;">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary" style="width:100%">Acceder al sistema</button>
+                    <div style="margin-top:20px;text-align:center;">
+                        <a href="home.html" style="font-size:0.8rem;color:var(--gray-400);text-decoration:none;">← Volver al portal público</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Dashboard Principal -->
-    <div id="dashboard-container" class="admin-dashboard" style="display:none;">
-        <div id="sidebar-overlay" class="sidebar-overlay" hidden></div>
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <h2>Admin DAPs</h2>
+    <!-- ░░ DASHBOARD PRINCIPAL ░░ -->
+    <div id="dashboard-container" class="admin-layout" style="display:none;">
+        
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-sidebar-logo">
+                    <svg width="24" height="24" viewBox="0 0 42 42" fill="none">
+                        <circle cx="21" cy="21" r="21" fill="#FFFFFF"/>
+                        <path d="M14 28c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="#1B4F72" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="21" cy="15" r="3.5" fill="#F0B429"/>
+                    </svg>
+                </div>
+                <span class="admin-sidebar-title">SADAP Admin</span>
             </div>
-            <ul class="nav-links">
-                <li><button class="tab-btn active" onclick="switchTab('solicitudes')">Solicitudes</button></li>
-                <li><button class="tab-btn" onclick="switchTab('inventario')">Inventario / Trazabilidad</button></li>
-                <li><button class="tab-btn" onclick="switchTab('alertas')">Auditoría Pacientes</button></li>
-                <li><button class="tab-btn tab-btn--danger" onclick="switchTab('mantenimiento')">Mantenimiento crítico</button></li>
-            </ul>
-            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
-        </nav>
 
-        <main class="main-content">
-            <header class="admin-topbar">
-                <div class="topbar-left">
-                    <button id="sidebar-toggle" class="icon-btn" type="button" aria-label="Abrir menú">☰</button>
-                    <div>
-                        <div class="topbar-title" id="topbar-title">Panel</div>
-                        <div class="topbar-subtitle">Operación y seguimiento</div>
+            <nav class="admin-nav">
+                <div class="nav-group-label">Gestión de trámites</div>
+                <button class="admin-nav-item active" onclick="switchTab('solicitudes')">
+                    <span>📋</span> Solicitudes
+                </button>
+                <button class="admin-nav-item" onclick="switchTab('inventario')">
+                    <span>📦</span> Inventario DAP
+                </button>
+
+                <div class="nav-group-label" style="margin-top:24px;">Seguimiento técnico</div>
+                <button class="admin-nav-item" onclick="switchTab('alertas')">
+                    <span>🔍</span> Auditoría Pacientes
+                </button>
+                <button class="admin-nav-item admin-nav-item--danger" onclick="switchTab('mantenimiento')">
+                    <span>⚠️</span> Mantenimiento Crítico
+                </button>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+                <button class="btn btn--outline-white btn--sm" style="width:100%" onclick="logout()">Cerrar sesión</button>
+            </div>
+        </aside>
+
+        <!-- Main Area -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left" style="display:flex;align-items:center;gap:16px;">
+                    <button class="icon-btn" id="sidebar-toggle" style="background:var(--gray-50);">☰</button>
+                    <div id="breadcrumb" style="font-size:0.8rem;color:var(--gray-400);font-weight:600;">
+                        Dashboard <span style="margin:0 4px;">/</span> <span id="current-view-name" style="color:var(--navy-mid);">Solicitudes</span>
                     </div>
                 </div>
-                <div class="topbar-actions">
-                    <button class="btn-secondary btn-compact" type="button" onclick="refreshActiveTab()">Actualizar</button>
+                <div class="header-user-info">
+                    <div class="user-meta">
+                        <span class="user-name">Funcionario Admin</span>
+                        <span class="user-role">Nivel central</span>
+                    </div>
+                    <div class="user-avatar">AD</div>
                 </div>
             </header>
 
-            <!-- Header Metrics -->
-            <div class="metrics-bar">
-                <div class="metric-card">Total Equipos: <span id="metric-total">0</span></div>
-                <div class="metric-card">Asignados: <span id="metric-asignados">0</span></div>
-                <div class="metric-card metric-card--warn">Auditoría DAP: <span id="metric-alertas">0</span></div>
-                <div class="metric-card metric-card--danger">Alerta Equipos: <span id="metric-mantenimiento">0</span></div>
-            </div>
+            <!-- Scrollable Content -->
+            <div class="admin-content">
+                
+                <!-- Metrics Bar -->
+                <div class="stats-grid">
+                    <div class="stat-card stat-card--blue">
+                        <div class="stat-card-icon">📦</div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-label">Total Equipos</span>
+                            <span class="stat-card-value" id="metric-total">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card--teal">
+                        <div class="stat-card-icon">👤</div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-label">Asignados</span>
+                            <span class="stat-card-value" id="metric-asignados">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card--amber">
+                        <div class="stat-card-icon">🔍</div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-label">Auditoría Pend.</span>
+                            <span class="stat-card-value" id="metric-alertas">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card--red">
+                        <div class="stat-card-icon">⚠️</div>
+                        <div class="stat-card-content">
+                            <span class="stat-card-label">Alertas Manto.</span>
+                            <span class="stat-card-value" id="metric-mantenimiento">0</span>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Tab: Solicitudes -->
-            <div id="tab-solicitudes" class="tab-content active">
-                <h3>Gestión de Solicitudes</h3>
-                <div class="table-tools">
-                    <input id="solicitudes-search" type="search" placeholder="Buscar por radicado, documento o nombre" autocomplete="off">
-                    <select id="solicitudes-estado">
-                        <option value="">Todos los estados</option>
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Aprobada">Aprobada</option>
-                        <option value="Rechazada">Rechazada</option>
-                    </select>
-                </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Radicado</th>
-                                <th>Documento</th>
-                                <th>Beneficiario</th>
-                                <th>DAP Requerido</th>
-                                <th>Estado</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="solicitudes-body"></tbody>
-                    </table>
-                </div>
-            </div>
+                <!-- ── VISTA: SOLICITUDES ── -->
+                <div id="tab-solicitudes" class="admin-tab active">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Gestión de Solicitudes</h2>
+                            <p>Validación y aprobación de trámites ciudadanos.</p>
+                        </div>
+                        <button class="btn btn--sm btn--primary" onclick="refreshActiveTab()">🔄 Actualizar</button>
+                    </div>
 
-            <!-- Tab: Inventario -->
-            <div id="tab-inventario" class="tab-content">
-                <div class="header-flex">
-                    <h3>Inventario & Trazabilidad</h3>
-                    <button class="btn-primary btn-sm" onclick="addEquipo()">+ Añadir Equipo</button>
+                    <div class="table-card">
+                        <div class="table-toolbar">
+                            <div class="search-wrapper">
+                                <i>🔍</i>
+                                <input id="solicitudes-search" class="search-input" type="search" placeholder="Buscar por radicado o documento...">
+                            </div>
+                            <select id="solicitudes-estado" style="max-width:200px;">
+                                <option value="">Todos los estados</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Aprobada">Aprobada</option>
+                                <option value="Rechazada">Rechazada</option>
+                            </select>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Radicado</th>
+                                        <th>Documento</th>
+                                        <th>Beneficiario</th>
+                                        <th>DAP solicitado</th>
+                                        <th>Estado</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="solicitudes-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-tools">
-                    <input id="inventario-search" type="search" placeholder="Buscar por codigo, tipo o asignado" autocomplete="off">
-                    <select id="inventario-estado">
-                        <option value="">Todos</option>
-                        <option value="Disponible">Disponible</option>
-                        <option value="Asignado">Asignado</option>
-                    </select>
-                </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Tipo DAP</th>
-                                <th>Estado</th>
-                                <th>Asignado a</th>
-                                <th>Fecha Devolución</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventario-body"></tbody>
-                    </table>
-                </div>
-            </div>
 
-            <!-- Tab: Alertas (Pacientes) -->
-            <div id="tab-alertas" class="tab-content">
-                <h3>Auditoría de Pacientes (3 Meses)</h3>
-                <p>Pacientes que requieren auditoría de estado y validación del equipo asigando.</p>
-                <div class="table-tools">
-                    <input id="alertas-search" type="search" placeholder="Buscar por equipo, beneficiario o telefono" autocomplete="off">
-                </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Equipo</th>
-                                <th>Beneficiario</th>
-                                <th>Teléfono</th>
-                                <th>Fecha Revisión</th>
-                                <th>Lugar Asignado</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="alertas-body"></tbody>
-                    </table>
-                </div>
-            </div>
+                <!-- ── VISTA: INVENTARIO ── -->
+                <div id="tab-inventario" class="admin-tab">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Inventario & Trazabilidad</h2>
+                            <p>Control de existencias y asignaciones de equipos.</p>
+                        </div>
+                        <button class="btn btn--sm btn--primary" onclick="addEquipo()">+ Registrar nuevo equipo</button>
+                    </div>
 
-            <!-- Tab: Mantenimiento Preventivo (Equipos) -->
-            <div id="tab-mantenimiento" class="tab-content">
-                <h3 style="color: var(--danger-color);">⚠️ Mantenimiento Preventivo Crítico</h3>
-                <p>Equipos que llevan más de 90 días sin revisión técnica estructural. <strong>Requieren atención inmediata.</strong></p>
-                <div class="table-tools">
-                    <input id="mantenimiento-search" type="search" placeholder="Buscar por codigo o tipo" autocomplete="off">
+                    <div class="table-card">
+                        <div class="table-toolbar">
+                            <div class="search-wrapper">
+                                <i>🔍</i>
+                                <input id="inventario-search" class="search-input" type="search" placeholder="Buscar por código o tipo...">
+                            </div>
+                            <select id="inventario-estado" style="max-width:200px;">
+                                <option value="">Todos los estados</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="Asignado">Asignado</option>
+                            </select>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Tipo de DAP</th>
+                                        <th>Estado</th>
+                                        <th>Asignado a</th>
+                                        <th>F. Devolución</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventario-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Código Equipo</th>
-                                <th>Tipo DAP</th>
-                                <th>Estado Actual</th>
-                                <th>Última Revisión</th>
-                                <th>Días de Retraso</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="mantenimiento-body"></tbody>
-                    </table>
-                </div>
-            </div>
 
+                <!-- ── VISTA: AUDITORÍA ── -->
+                <div id="tab-alertas" class="admin-tab">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2>Auditoría de Pacientes</h2>
+                            <p>Pacientes con más de 90 días en posesión del equipo.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-toolbar">
+                            <div class="search-wrapper">
+                                <i>🔍</i>
+                                <input id="alertas-search" class="search-input" type="search" placeholder="Criterio de búsqueda...">
+                            </div>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Equipo</th>
+                                        <th>Beneficiario</th>
+                                        <th>Teléfono</th>
+                                        <th>F. Revisión</th>
+                                        <th>Ubicación</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="alertas-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── VISTA: MANTENIMIENTO ── -->
+                <div id="tab-mantenimiento" class="admin-tab">
+                    <div class="view-header">
+                        <div class="view-title">
+                            <h2 style="color:var(--danger)">⚠️ Alertas de Mantenimiento</h2>
+                            <p>Equipos que requieren revisión técnica estructural inmediata.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-card" style="border-top:4px solid var(--danger);">
+                        <div class="table-toolbar">
+                            <div class="search-wrapper">
+                                <i>🔍</i>
+                                <input id="mantenimiento-search" class="search-input" type="search" placeholder="Código de equipo...">
+                            </div>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Tipo DAP</th>
+                                        <th>Última Rev.</th>
+                                        <th>Días Retraso</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mantenimiento-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </main>
     </div>
 
+    <!-- ░░ MODALES ░░ -->
+    
     <!-- Modal Asignación -->
     <div id="asignar-modal" class="modal-overlay" hidden>
-        <div class="modal-content modal-md" role="dialog" aria-modal="true" aria-labelledby="asignar-title">
+        <div class="modal-content" style="max-width:520px;">
             <div class="modal-header">
-                <h3 id="asignar-title">Asignar equipo (aprobar)</h3>
-                <button class="icon-btn" type="button" onclick="cerrarAsignarModal()" aria-label="Cerrar">×</button>
+                <h2>Asignar equipo y aprobar</h2>
+                <button class="icon-btn" onclick="cerrarAsignarModal()">×</button>
             </div>
-            <p>Beneficiario: <strong id="asig_beneficiario"></strong></p>
+            <div style="margin-bottom:20px;padding:12px;background:var(--gray-50);border-radius:var(--r-sm);">
+                <span style="font-size:0.75rem;color:var(--gray-400);font-weight:700;">BENEFICIARIO</span>
+                <div id="asig_beneficiario" style="font-weight:700;color:var(--navy-dark);">--</div>
+            </div>
             <input type="hidden" id="asig_sol_id">
             
-            <div class="form-group">
-                <label>Equipo Disponible *</label>
+            <div class="form-group" style="margin-bottom:16px;">
+                <label>Seleccionar equipo disponible *</label>
                 <select id="asig_equipo" required></select>
             </div>
-            <div class="form-group">
-                <label>Lugar de Entrega (Oficial) *</label>
-                <input type="text" id="asig_ubicacion" required placeholder="Ej: Sede Principal Teusaquillo">
+            <div class="form-group" style="margin-bottom:16px;">
+                <label>Lugar oficial de entrega *</label>
+                <input type="text" id="asig_ubicacion" placeholder="Ej: Sede Teusaquillo">
             </div>
-            <div class="form-group">
-                <label>Fecha de Devolución Programada *</label>
+            <div class="form-group" style="margin-bottom:24px;">
+                <label>Fecha devolución programada *</label>
                 <input type="date" id="asig_fecha_dev" required>
             </div>
             
             <div class="form-actions">
-                <button class="btn-secondary" onclick="cerrarAsignarModal()">Cancelar</button>
-                <button class="btn-success" onclick="submitAsignar()">Confirmar Asignación</button>
+                <button class="btn btn--secondary" onclick="cerrarAsignarModal()">Cancelar</button>
+                <button class="btn btn--primary" onclick="submitAsignar()">Confirmar asignación</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Mantenimiento -->
     <div id="mantenimiento-modal" class="modal-overlay" hidden>
-        <div class="modal-content modal-sm" role="dialog" aria-modal="true" aria-labelledby="manto-title">
+        <div class="modal-content" style="max-width:440px;border-top:4px solid var(--danger);">
             <div class="modal-header">
-                <h3 id="manto-title" style="color: var(--danger-color);">Completar mantenimiento</h3>
-                <button class="icon-btn" type="button" onclick="cerrarMantenimientoModal()" aria-label="Cerrar">×</button>
+                <h2 style="color:var(--danger)">Confirmar mantenimiento</h2>
+                <button class="icon-btn" onclick="cerrarMantenimientoModal()">×</button>
             </div>
-            <p>¿Estás completamente seguro de marcar el equipo <strong id="manto_codigo"></strong> como revisado?</p>
-            <p class="file-instructions">Esto actualizará su fecha de "última revisión" al día de hoy, y la alerta automática volverá a saltar dentro de 90 días continuos.</p>
+            <p style="font-size:0.9rem;line-height:1.6;color:var(--gray-600);">¿Confirma que el equipo <strong id="manto_codigo" style="color:var(--navy-dark);"></strong> ha recibido su mantenimiento técnico estructural hoy?</p>
             <input type="hidden" id="manto_equipo_id">
             
             <div class="form-actions">
-                <button class="btn-secondary" onclick="cerrarMantenimientoModal()">Cancelar</button>
-                <button class="btn-danger" onclick="submitMantenimiento()">Sí, marcar como completado</button>
+                <button class="btn btn--secondary" onclick="cerrarMantenimientoModal()">Cancelar</button>
+                <button class="btn btn--submit" style="background:var(--danger)" onclick="submitMantenimiento()">Marcar como completado</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
+    <!-- Toasts -->
     <div id="toast-container" class="toast-container"></div>
 
     <script src="js/admin.js"></script>

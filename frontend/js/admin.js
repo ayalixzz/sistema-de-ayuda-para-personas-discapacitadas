@@ -63,11 +63,13 @@ function showDashboard() {
 }
 
 window.switchTab = (tab) => {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
     
     document.getElementById(`tab-${tab}`).classList.add('active');
-    document.querySelector(`button[onclick="switchTab('${tab}')"]`).classList.add('active');
+    
+    const btn = document.querySelector(`button[onclick="switchTab('${tab}')"]`);
+    if (btn) btn.classList.add('active');
 
     setTopbarTitle(tab);
     closeSidebar();
@@ -79,7 +81,7 @@ window.switchTab = (tab) => {
 };
 
 window.refreshActiveTab = () => {
-    const active = document.querySelector('.tab-content.active');
+    const active = document.querySelector('.admin-tab.active');
     if (!active || !active.id) return;
     const tab = active.id.replace(/^tab-/, '');
     if (tab === 'solicitudes') loadSolicitudes();
@@ -100,7 +102,7 @@ async function fetchWithAuth(url, options = {}) {
 }
 
 function setTopbarTitle(tab) {
-    const el = document.getElementById('topbar-title');
+    const el = document.getElementById('current-view-name');
     if (!el) return;
     const map = {
         solicitudes: 'Solicitudes',
@@ -169,18 +171,21 @@ function renderSolicitudes() {
         const tr = document.createElement('tr');
         const nombre = `${s.nombres || ''} ${s.apellidos || ''}`.trim();
         const nombreJs = JSON.stringify(nombre);
-        const badge = s.estado_solicitud === 'Pendiente' ? 'warning' : (s.estado_solicitud === 'Rechazada' ? 'danger' : 'success');
+        
+        let badgeClass = 'badge--warning';
+        if (s.estado_solicitud === 'Aprobada') badgeClass = 'badge--success';
+        if (s.estado_solicitud === 'Rechazada') badgeClass = 'badge--danger';
 
         tr.innerHTML = `
-            <td>${s.numero_radicado}</td>
-            <td>${s.numero_documento}</td>
+            <td style="font-weight:700; color:var(--navy-mid)">#${s.numero_radicado}</td>
+            <td style="font-family:var(--ff-head); font-weight:700;">${s.numero_documento}</td>
             <td>${nombre || '-'}</td>
-            <td>${s.tipo_dap} / ${s.dispositivo_requerido}</td>
+            <td><span style="font-size:0.75rem; color:var(--gray-400); font-weight:700;">${s.tipo_dap.toUpperCase()}</span><br>${s.dispositivo_requerido}</td>
             <td>
-                <span class="badge badge-${badge}">${s.estado_solicitud}</span>
+                <span class="badge ${badgeClass}">${s.estado_solicitud}</span>
             </td>
             <td>
-                ${s.estado_solicitud === 'Pendiente' ? `<button class="btn-sm" onclick="openAsignarModal(${s.id}, ${nombreJs})">Asignar equipo</button>` : 'N/A'}
+                ${s.estado_solicitud === 'Pendiente' ? `<button class="btn btn--primary btn--table" onclick="openAsignarModal(${s.id}, ${nombreJs})">Gestionar</button>` : '---'}
             </td>
         `;
         tbody.appendChild(tr);
@@ -274,17 +279,18 @@ function renderInventario() {
     });
 
     tbody.innerHTML = '';
-    if (rows.length === 0) return tbodyEmpty(tbody, 5, 'Sin resultados.');
+    if (rows.length === 0) return tbodyEmpty(tbody, 6, 'Sin resultados.');
 
     rows.forEach(e => {
         const tr = document.createElement('tr');
-        const badge = e.estado === 'Disponible' ? 'success' : (e.estado === 'Asignado' ? 'warning' : 'danger');
+        const badgeClass = e.estado === 'Disponible' ? 'badge--success' : (e.estado === 'Asignado' ? 'badge--info' : 'badge--warning');
         tr.innerHTML = `
-            <td>${e.codigo_inventario}</td>
+            <td style="font-weight:700;">${e.codigo_inventario}</td>
             <td>${e.tipo_dap}</td>
-            <td><span class="badge badge-${badge}">${e.estado}</span></td>
-            <td>${e.asignado_a || '-'}</td>
+            <td><span class="badge ${badgeClass}">${e.estado}</span></td>
+            <td>${e.asignado_a || '<span style="color:var(--gray-300)">Ninguno</span>'}</td>
             <td>${e.fecha_devolucion ? new Date(e.fecha_devolucion).toLocaleDateString() : '-'}</td>
+            <td>---</td>
         `;
         tbody.appendChild(tr);
     });
@@ -343,12 +349,12 @@ function renderAlertas() {
     rows.forEach(a => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${a.equipo_codigo} (${a.tipo_dap})</td>
-            <td>${a.beneficiario}</td>
+            <td style="font-weight:700;">${a.equipo_codigo} <br> <small style="color:var(--gray-400)">${a.tipo_dap}</small></td>
+            <td style="font-weight:600;">${a.beneficiario}</td>
             <td>${a.telefono}</td>
-            <td class="text-danger">${new Date(a.fecha_revision).toLocaleDateString()}</td>
+            <td><span class="badge badge--danger">${new Date(a.fecha_revision).toLocaleDateString()}</span></td>
             <td>${a.ubicacion_entrega}</td>
-            <td><button class="btn-sm" onclick="showToast('Notificando via manual...', 'warning')">Notificar</button></td>
+            <td><button class="btn btn--secondary btn--table" onclick="showToast('Notificando via manual...', 'warning')">Notificar</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -388,13 +394,15 @@ function renderMantenimiento() {
     rows.forEach(m => {
         const tr = document.createElement('tr');
         const codigoJs = JSON.stringify(m.codigo_inventario || '');
+        const badgeClass = m.estado === 'Disponible' ? 'badge--success' : 'badge--warning';
+        
         tr.innerHTML = `
-            <td>${m.codigo_inventario}</td>
+            <td style="font-weight:700;">${m.codigo_inventario}</td>
             <td>${m.tipo_dap}</td>
-            <td><span class="badge badge-${m.estado === 'Disponible' ? 'success' : 'warning'}">${m.estado}</span></td>
-            <td>${m.ultima_revision ? new Date(m.ultima_revision).toLocaleDateString() : '-'}</td>
-            <td class="text-danger">${m.dias_retraso}</td>
-            <td><button class="btn-sm" onclick="openMantenimientoModal(${m.id}, ${codigoJs})">Marcar revisado</button></td>
+            <td><span class="badge ${badgeClass}">${m.estado}</span></td>
+            <td>${m.ultima_revision ? new Date(m.ultima_revision).toLocaleDateString() : 'Sin registro'}</td>
+            <td><span style="color:var(--danger); font-weight:900;">${m.dias_retraso} días</span></td>
+            <td><button class="btn btn--submit btn--table" style="background:var(--danger); color:white" onclick="openMantenimientoModal(${m.id}, ${codigoJs})">Marcar revisado</button></td>
         `;
         tbody.appendChild(tr);
     });
